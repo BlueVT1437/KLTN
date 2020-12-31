@@ -1,0 +1,35 @@
+.footer{
+  height: 10rem;
+  width: 100%;
+  background-color: black;
+  color: white;
+
+  >img{
+    position: absolute;
+    width: 100%;
+  }
+  .social{
+    position: absolute;
+    width: 100%;
+    margin-top: 1rem;
+    
+    .text {
+      width: 93%;
+      float: left;
+      color: white;
+      font-size: 20px;
+      
+      *{
+        float: left;
+        width: fit-content;
+        margin-left: 13%;
+      }
+    }   
+
+    .icon{
+      width: fit-content;
+      margin-left: 10px;
+      font-size: 35px;
+    }
+  }
+}

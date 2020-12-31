@@ -1,0 +1,39 @@
+.auctioning{
+  height: auto;
+  background-color: rgba(153, 64, 4, 0.753);
+  max-width: 110rem;
+  width: 100%;
+  
+  .auctioning-header{
+    height: 1rem;
+  }
+
+  .col-sm-3{
+    background-color: white;
+
+    label{
+      margin-bottom: 1.5rem;
+      margin-left: 20px;
+      
+    }
+    .nav{
+      background-color: white;
+
+      .nav-item{
+
+        .nav-link.active{
+          background-color: white;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .nav-pills{
+      a{
+        color:  rgba(153, 64, 4, 0.753);
+        white-space: nowrap;
+      }
+    }
+    
+  }
+}

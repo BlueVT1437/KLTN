@@ -1,0 +1,27 @@
+.sell{
+  width: 100%;
+  height: auto;
+
+  h1{
+    margin-left: 10%;
+    margin-top: 2vh;
+  }
+
+  Form{
+    width: 80%;
+    height: auto;
+    margin-left: 10%;
+    margin-top: 2vh;
+
+    .date-time{
+      *{
+        width: 40%;
+        float: left;
+      }
+
+      .time{
+        margin-left: 20%;
+      }
+    }
+  }
+}

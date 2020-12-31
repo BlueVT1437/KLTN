@@ -1,0 +1,34 @@
+.header{
+  height: 6rem;
+  width: 100%;
+  background-color: #b26f42;
+
+  >img{
+    width: 6rem;
+    height: 6rem;
+    margin-left: 2rem;
+    float: left;
+  }
+
+  h1{
+    font-size: 30px;
+    font-weight: bold;
+    margin-left: 40%;
+    margin-top: 2rem;
+    color: white;
+    float: left;
+  }
+
+  button{
+    color: #7e4f30;
+    background-color: white;
+    border-color: #b26f42;
+  }
+
+  .notic{
+    position: absolute;
+    left: 67%;
+    top: 8%;
+    z-index: 1;
+  }
+}

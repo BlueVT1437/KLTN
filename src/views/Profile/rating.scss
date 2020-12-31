@@ -1,0 +1,25 @@
+.rating{
+  height: auto;
+  width: 100%;
+  background-color: #b26f42;
+
+  .body{
+    background-color: white;
+    width: 96%;
+    height: auto;
+
+    .left{
+      
+      img{
+        width: 18rem;
+      }
+    }
+    
+    .click{
+      *{
+        margin-left: 5%;
+      }
+    }
+  }
+
+}

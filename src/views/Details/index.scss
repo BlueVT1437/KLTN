@@ -1,0 +1,29 @@
+.details{
+  height: auto;
+  width: 100%;
+  background-color: #f1f3f6;
+  
+  .details-body{
+    height: auto;
+    width: 99%;
+    background-color: white;
+    
+    .name{
+      height: 5rem;
+      font-size: 25px;
+      font-weight: bolder;
+    }
+    .mota{
+      border: 1px solid brown;
+      width: 23.2rem;
+      height: 6rem;
+    }
+
+    .rbd{
+      border: 1px solid brown;
+      height: 2rem;
+      justify-content: center;  
+    }
+    
+  }
+}

@@ -1,0 +1,84 @@
+.brands{
+  width: 100%;
+  height: auto;
+  background-color: white;
+
+  .text{
+    width: 15rem;
+    font-size: 30px;
+    font-weight: bold;
+    margin-left: 3vw;
+    margin-top: 1vh;
+    float: left;
+    color: #7a4310;
+  }
+
+  .sort{
+    margin-left: 60%;
+    margin-top: 1rem;
+    float: left;
+
+    >button{
+      width: 10vw;
+      color: #fff;
+      background-color: #7a4310;
+      border-color: #7a4310;
+
+      &:hover{
+        background-color: #58310c;
+        border: none;
+      }
+
+      &:focus{
+        background-color: #7a4310;
+        box-shadow: none;
+      }
+
+      &:active{
+        background-color: #58310c;
+      }
+    }
+  }
+}
+
+.goods{
+  height: auto;
+  width: 99%;
+  background-color: white;
+
+  ul{
+    padding-top: 5vh;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    list-style-type: none;
+
+    li{
+      width: 17%;
+      color: #7a4310;
+      border: 1px solid black;
+      height: 32vh;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      .images{
+        height: 8.5rem;
+        display: flex;
+        justify-content: center;
+
+        img{
+          height: 8rem;
+        }
+      }
+
+      .cont{
+        height: 30%;
+        text-align: center;
+  
+        .category{
+          word-break: break-all;
+          height: 3rem;
+        }
+      }
+    }
+  }
+}
