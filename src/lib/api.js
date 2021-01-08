@@ -4,7 +4,6 @@ const createProducts = (params) => {
   var data = JSON.stringify({
     name: params.name,
     productPictures: params.link,
-    condition: params.status,
     startPrice: params.priceReserve,
     stepUp: params.price,
     description: params.description,
@@ -15,7 +14,7 @@ const createProducts = (params) => {
     userId: params.userId
   });
 
-  var config = { 
+  var config = {
     method: "post",
     url: "https://auctionapp66.herokuapp.com/api/product/create",
     headers: {
@@ -46,7 +45,7 @@ const createAuction = (params) => {
   }
   var config = {
     method: "post",
-    url:"https://auctionapp66.herokuapp.com/api/auction/create",
+    url: "https://auctionapp66.herokuapp.com/api/auction/create",
     data: data,
   }
   return axios(config)
@@ -148,9 +147,7 @@ const signOut = () => {
 const addressCreate = (params) => {
   var data = {
     mobileNumber: params.phone,
-    pinCode: params.code,
     detail: params.address,
-    district: params.district,
     city: params.city,
     alternatePhone: params.alphone,
     addressType: params.type,
@@ -183,7 +180,7 @@ const getOrder = (params) => {
   return axios(config);
 }
 
-const rateUser = (params) => { 
+const rateUser = (params) => {
   var data = {
     star: params.star,
     orderId: params.orderId
@@ -243,7 +240,7 @@ const loginAd = (params) => {
 const getAllProducts = (params) => {
   var config = {
     method: "get",
-    url: "https://auctionapp66.herokuapp.com/api/product/getallproducts?page=1&limit=20",
+    url: "https://auctionapp66.herokuapp.com/api/product/getallproducts?page=1&limit=120",
   };
   return axios(config);
 }
@@ -268,7 +265,7 @@ const lockUser = (userId) => {
   var data = {
     userId: userId,
   }
-  
+
   var config = {
     method: "patch",
     url: "https://auctionapp66.herokuapp.com/api/admin/lockuser",
@@ -282,7 +279,7 @@ const lockUser = (userId) => {
 
 const okProduct = (productId) => {
   var data = {
-    id: productId,
+    productId: productId,
   }
 
   var config = {
@@ -294,6 +291,94 @@ const okProduct = (productId) => {
     data: data,
   };
   return axios(config);
+}
+
+const searchProduct = (params) => {
+  var config = {
+    method: "get",
+    url: `https://auctionapp66.herokuapp.com/api/product/searchproduct?name=${params.name}`,
+  };
+  return axios(config);
+}
+
+const getRevenue = (value) => {
+  var config = {
+    method: "get",
+    url: `https://auctionapp66.herokuapp.com/api/order/getrevenue/${value}`,
+  };
+  return axios(config);
+}
+const getBill = (params) => {
+  var config = {
+    method: "get",
+    url: 'https://auctionapp66.herokuapp.com/api/admin/getallorders?page=1&limit=120',
+  };
+  return axios(config)
+}
+const loginSocial = (params) => {
+  var data = {
+    uid: params.uid,
+    email: params.email,
+    displayName: params.displayName
+  }
+
+  var config = {
+    method: "post",
+    url: 'https://auctionapp66.herokuapp.com/api/signinsocialaccount',
+    data: data
+  }
+  return axios(config)
+}
+
+const updateUser = (params) => {
+  var data = {
+    userId: params.userId,
+    firstName: params.firstName,
+    lastName: params.lastName,
+    contactNumber: params.phone
+  }
+
+  var config = {
+    method: 'patch',
+    url: 'https://auctionapp66.herokuapp.com/api/user/updateuser',
+    data: data
+  }
+  return axios(config)
+}
+
+const email = (value) => {
+  var data = {
+    orderId: value
+  }
+
+  var config = {
+    method: "post",
+    url: 'https://auctionapp66.herokuapp.com/api/order/createinvoice',
+    data: data
+  }
+  return axios(config)
+}
+
+const getSold = (params) => {
+  var config = {
+    method: "get",
+    url: "https://auctionapp66.herokuapp.com/api/product/gethistory/" + params.userId,
+  };
+  return axios(config);
+}
+
+const updateStatus = (params) => {
+  var data = {
+    orderId: params.orderId,
+    charge: params.charge
+  }
+
+  var config = {
+    method: "patch",
+    url:"https://auctionapp66.herokuapp.com/api/order/updatestatus",
+    data: data
+  }
+  return axios(config)
 }
 
 export {
@@ -321,5 +406,13 @@ export {
   getAllUsers,
   getProductsNotValid,
   lockUser,
-  okProduct
+  okProduct,
+  searchProduct,
+  getRevenue,
+  getBill,
+  loginSocial,
+  updateUser,
+  email,
+  getSold,
+  updateStatus
 }

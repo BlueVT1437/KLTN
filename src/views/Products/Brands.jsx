@@ -32,10 +32,10 @@ const Brands = (props) => {
           </div>
         ) : ('')
       }
-      <DropdownButton alignRight title="Filter" className='sort'>
+      {/* <DropdownButton alignRight title="Filter" className='sort'>
         <Dropdown.Item eventKey="#/action-1">Time</Dropdown.Item>
         <Dropdown.Item eventKey="#/action-2">Low Price</Dropdown.Item>
-      </DropdownButton>
+      </DropdownButton> */}
 
       <div className='goods mb-3'>
         <ul className='body-dishes mx-4'>

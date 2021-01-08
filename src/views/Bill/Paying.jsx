@@ -13,7 +13,7 @@ function Paying(props) {
         </Modal.Header>
         <Modal.Body>Bạn đã đấu giá thành công món hàng~~~</Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={()=> history.push('/')}>
+          <Button variant="secondary" onClick={()=> history.push('/')}>
             Thank you
           </Button>
         </Modal.Footer>

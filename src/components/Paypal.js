@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from 'react'
 export default function Paypal(props) {
   const { getStatus } = props
   const paypal = useRef()
-  const buynow = Math.trunc(localStorage.getItem('buynow') / 23000) + 1
+  const buynow = ((Math.trunc(localStorage.getItem('buynow') / 23000) + 1) < 20) ? 20 : (Math.trunc(localStorage.getItem('buynow') / 23000) + 1)
 
   useEffect(() => {
     window.paypal.Buttons({
@@ -23,9 +23,14 @@ export default function Paypal(props) {
       },
       onApprove: async (data, actions) => {
         const order = await actions.order.capture();
-        console.log(order)
-        getStatus(() => (order.status == 'COMPLETED') ? 1 : 0)
-        window.alert('thanh toán thành công!!!')
+        if (buynow != 20) {
+          getStatus(() => (order.status == 'COMPLETED') ? 1 : 0)
+          window.alert('thanh toán thành công!!!')
+        }
+        else{
+          getStatus(() => (order.status == 'COMPLETED') ? 1 : 0)
+          window.alert('đặt cọc thành công!!!')
+        }
       },
       onError: (err) => {
         console.log(err)

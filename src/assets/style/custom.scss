@@ -36,7 +36,7 @@
     box-shadow: none;
   }
   &:active{
-    background-color: transparent;
+    background-color: #58310c;
     box-shadow: none;
   }
 }
@@ -65,5 +65,19 @@
     &:active{
       background-color: #58310c;
     }
+  }
+}
+
+.react-bootstrap-table{
+  overflow-x: auto !important;
+}
+
+.react-bootstrap-table-pagination{
+  >div{
+    max-width: 75%;
+    flex: 0 0 75%;
+  }
+  .react-bootstrap-table-pagination-list{
+    max-width: 20%;
   }
 }

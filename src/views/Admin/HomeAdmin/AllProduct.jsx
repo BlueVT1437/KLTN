@@ -3,13 +3,14 @@ import '../../../assets/style/custom.scss'
 import '../../../assets/style/props.scss'
 import { Button } from 'react-bootstrap'
 import BootstrapTable from 'react-bootstrap-table-next'
-import {withRouter} from 'react-router'
+import { withRouter } from 'react-router'
+import paginationFactory from 'react-bootstrap-table2-paginator'
 
 import { getAllProducts } from '../../../lib/api'
 
 import InfoProduct from './InfoProduct'
 
-const AllProduct = ({history}) => {
+const AllProduct = ({ history }) => {
 
   const [show, setShow] = useState(false)
   const [allProducts, setAllProducts] = useState([])
@@ -25,7 +26,7 @@ const AllProduct = ({history}) => {
     return {
       stt: i + 1,
       name: value.name,
-      price:  new Intl.NumberFormat('de-DE').format(value.currentPrice) + ' VND',
+      price: new Intl.NumberFormat('de-DE').format(value.currentPrice) + ' VND',
       status: (value.role === 1) ? "Đang đấu giá" : "Đã hết hạn",
       pictures: value.productPictures,
       id: value._id
@@ -80,11 +81,12 @@ const AllProduct = ({history}) => {
         responsive
         selectRow={selectRow}
         rowEvents={rowEvents}
+        pagination={paginationFactory()}
       />
-      <div className='click ml-70pt py-4'>
-      <Button variant="secondary" onClick={() => {
+      <div className='click ml-80pt py-4'>
+        <Button className='ml-5' variant="secondary" onClick={() => {
           localStorage.setItem('tokenAd', '')
-          history.push('/')
+          history.push('/admin')
         }}>Đăng xuất</Button>
       </div>
       <InfoProduct show={show} handleClose={handleClose} pictures={pictures} />

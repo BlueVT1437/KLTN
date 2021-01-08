@@ -38,7 +38,7 @@ const Rating = (props) => {
               <Col sm={1}/>
               <Col sm={12}>
                 <Form.Group as={Row} >
-                  <Form.Label column className='text-right' lg={3}>Rating</Form.Label>
+                  <Form.Label column className='text-right' lg={3}>Đánh giá người bán</Form.Label>
                   <Col lg={6}>
                     <ReactStars
                       count={5}

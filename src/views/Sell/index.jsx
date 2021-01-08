@@ -6,6 +6,7 @@ import { Button, Form, Row, InputGroup, Col } from 'react-bootstrap'
 import { createProducts } from '../../lib/api'
 import { storage } from "../../firebase";
 
+import Paypal from '../../components/Paypal'
 import Header from '../../components/Header'
 
 const Sell = ({ history }) => {
@@ -17,7 +18,7 @@ const Sell = ({ history }) => {
   const [priceReserve, setPriceReserve] = useState(0)
   const [category, setCategory] = useState('')
   const [brands, setBrands] = useState('')
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState(0)
   const [time, setTime] = useState('')
   const [sold, setSold] = useState(0)
   const [image, setImage] = useState([])
@@ -51,12 +52,11 @@ const Sell = ({ history }) => {
                 priceReserve: priceReserve,
                 category: category,
                 brands: brands,
-                status: status,
                 sold: sold,
                 link: array,
                 userId: userId
               }
-              if(image.length === array.length){
+              if (image.length === array.length) {
                 console.log(data)
                 createProducts(data)
               }
@@ -92,10 +92,6 @@ const Sell = ({ history }) => {
     setBrands(event.target.value)
   }
 
-  const getStatus = (event) => {
-    setStatus(event.target.value)
-  }
-
   const getSold = (event) => {
     setSold((event.target.value) * 1000);
   }
@@ -107,7 +103,7 @@ const Sell = ({ history }) => {
       <Header />
       <div className='sell'>
         <h1 className='fs-30'><b>POST YOUR ITEM</b></h1>
-
+        <h1>*Khoản tiền bạn phải đặt cọc là 20 USD và bạn phải thanh toán Paypal trước khi điền thông tin</h1>
         <Form className='form1' onSubmit={onSubmit}>
           <Form.Group as={Row}>
             <br />
@@ -163,15 +159,6 @@ const Sell = ({ history }) => {
               </Form.Control>
             </Col>
             <br />
-            <Form.Label column sm={10}>Status item</Form.Label>
-            <Col sm={10}>
-              <Form.Control as="select" onChange={getStatus} >
-                <option value=''>Chose your status item</option>
-                <option value='new'>New</option>
-                <option value='used'>Used</option>
-              </Form.Control>
-            </Col>
-            <br />
             <Form.Label column sm={10}>Price step</Form.Label>
             <Col sm={10}>
 
@@ -210,20 +197,15 @@ const Sell = ({ history }) => {
               </InputGroup>
             </Col>
             <br />
-            {/* <Form.Label column sm={10}>Time</Form.Label>
-          <Col sm={10}>
-
-            <Form.Group className='date-time'>
-              <Form.Control className='date' type="date"  />
-              <Form.Control className='time' type="time"  />
-            </Form.Group>
-          </Col> */}
-          <br/>
             <Col sm={10}>
               <Form.File id="exampleFormControlFile1" label="Chose your image" multiple onChange={handleChange} required />
             </Col>
           </Form.Group>
-          <Button className='my-3 btn-grown' variant="primary" type='submit' >
+          {(status === 0 && name === '') ?
+            (<Paypal getStatus={(status) => setStatus(status)} />)
+            : ('')
+          }
+          <Button className='my-3 btn-grown fs-25' variant='secondary' style={{ width: '47rem', height: '3.5rem', marginLeft: '14.5rem' }} type='submit' disabled={(status === 0) ? true : false} >
             SUBMIT
         </Button>
         </Form>
@@ -231,6 +213,4 @@ const Sell = ({ history }) => {
     </>
   )
 }
-
 export default Sell
-

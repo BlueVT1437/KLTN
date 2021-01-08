@@ -8,6 +8,8 @@ import { withRouter } from "react-router"
 import Loading from '../../components/Loading'
 import Header from '../../components/Header'
 import { getProductbyId, getAuctionByProduct, createAuction, checkExpired } from '../../lib/api'
+// import {io} from '../../socket';
+// import { Socket } from 'socket.io-client'
 
 const Details = (props) => {
   const { match, history } = props
@@ -37,10 +39,13 @@ const Details = (props) => {
   const upPrice = () => {
     if (token !== '') {
       if (info.currentPrice < info.buyNow) {
+
         createAuction(data).then((res) => {
-          console.log(res.data)
           setPrice(res.data.auction.price)
         })
+        // .then(()=>{
+        //   io.emit("auction",{room:id})
+        // })
       }
       else {
         localStorage.setItem('buynow', info.buyNow)
@@ -94,7 +99,7 @@ const Details = (props) => {
                   <Form.Group as={Row}>
                     <Form.Label column sm={3}>Price Step</Form.Label>
                     <Col sm={7}>
-                      <Form.Label className='rbd' as={Row} disabled>{new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'VND' }).format(info.stepUp)}</Form.Label>
+                      <Form.Label className='rbd' as={Row} disabled>{new Intl.NumberFormat('de-DE').format(info.stepUp)} VND</Form.Label>
                     </Col>
                   </Form.Group>
 
@@ -140,7 +145,7 @@ const Details = (props) => {
                             return (
                               <tr key={i} className='' >
                                 <td>{value.user.username}</td>
-                                <td>{value.price}</td>
+                                <td>{new Intl.NumberFormat('de-DE').format(value.price)} VND</td>
                               </tr>
                             )
                           })

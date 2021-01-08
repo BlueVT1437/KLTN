@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import Chart from "react-apexcharts";
-import { Row, Nav } from "react-bootstrap";
+import { Row, Form, Col, Button } from "react-bootstrap";
 import './revenue.scss'
+
+import { getRevenue } from '../../../lib/api'
 
 class Revenue extends Component {
   constructor(props) {
@@ -9,12 +11,12 @@ class Revenue extends Component {
 
     this.state = {
       series: [{
-        name: "USD",
-        data: [120, 249, 569],
+        name: "VND",
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 249, 569 * 23000],
       }],
       options: {
         chart: {
-          height: 180,
+          height: 300,
           type: 'line',
           zoom: {
             enabled: true
@@ -23,7 +25,7 @@ class Revenue extends Component {
           dropShadow: {
             enabled: true,
             color: '#000',
-            top: 18,
+            top: 22,
             left: 7,
             blur: 10,
             opacity: 0.2
@@ -49,28 +51,42 @@ class Revenue extends Component {
           size: 2,
         },
         xaxis: {
-          categories: ['Oct', 'Nov', 'Dec'],
-          max: 3,
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          max: 12,
           offsetX: 0,
         },
         yaxis: {
-          min: 0,
-          max: 800,
+          max: 100000000,
           labels: {
-            minWidth: 0,
             maxWidth: 1500,
             formatter: function (value) {
               if (parseInt(value) >= 1000) {
-                return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' VND';
               } else {
-                return '$' + value;
+                return value + ' VND';
               }
             }
           }
         }
       },
     }
+    this.getNam = this.getNam.bind(this)
+    // this.getThang = this.getThang.bind(this)
   }
+
+  getNam(e) {
+    getRevenue(e.target.value).then((res) => {
+      this.setState({
+        series: [{
+          name: "VND",
+          data:  [res.data.data[0].month1, res.data.data[0].month2, res.data.data[0].month3,
+          res.data.data[0].month4, res.data.data[0].month5, res.data.data[0].month6, res.data.data[0].month7,
+          res.data.data[0].month8, res.data.data[0].month9, res.data.data[0].month10, res.data.data[0].month11, res.data.data[0].month12]
+        }]
+      })
+    })
+  }
+  
 
   render() {
     return (
@@ -81,20 +97,33 @@ class Revenue extends Component {
               <div className="flex-wrap items-center">
                 <div className="relative w-full">
                   <h1 className='fs-30 my-3'><b>Doanh Thu</b></h1>
-                  {/* <Nav
-                    activeKey="/home"
-                    onSelect={(selectedKey) => alert(`selected ${selectedKey}`)}
-                  >
-                    <Nav.Item>
-                      <Nav.Link className='a-custom' eventKey="/home">Weekly</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link className='a-custom' eventKey="/home2">Monthly</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link className='a-custom' eventKey="/home3">Yearly</Nav.Link>
-                    </Nav.Item>
-                  </Nav> */}
+                  <Form.Group as={Row}>
+                    <Col sm={2}>
+                      <Form.Control as='select' onChange={this.getNam}>
+                        <option>Chọn năm</option>
+                        <option value='2020'>2020</option>
+                        <option value='2021'>2021</option>
+                        <option value='2022'>2022</option>
+                      </Form.Control>
+                    </Col>
+                    {/* <Col sm={2}>
+                      <Form.Control as='select' onChange={this.getThang}>
+                        <option>Chọn tháng</option>
+                        <option value='1'>Tháng 1</option>
+                        <option value='2'>Tháng 2</option>
+                        <option value='3'>Tháng 3</option>
+                        <option value='4'>Tháng 4</option>
+                        <option value='5'>Tháng 5</option>
+                        <option value='6'>Tháng 6</option>
+                        <option value='7'>Tháng 7</option>
+                        <option value='8'>Tháng 8</option>
+                        <option value='9'>Tháng 9</option>
+                        <option value='10'>Tháng 10</option>
+                        <option value='11'>Tháng 11</option>
+                        <option value='12'>Tháng 12</option>
+                      </Form.Control>
+                    </Col> */}
+                  </Form.Group>
                 </div>
               </div>
             </div>
@@ -106,8 +135,8 @@ class Revenue extends Component {
                     options={this.state.options}
                     series={this.state.series}
                     type="line"
-                    height='300px'
-                    width='900px'
+                    height='370px'
+                    width='1000px'
                     className='bieudo mx-3'
                   />
                 </Row>

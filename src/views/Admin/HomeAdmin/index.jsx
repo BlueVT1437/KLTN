@@ -2,36 +2,39 @@ import React from 'react'
 import './index.scss'
 import '../../../assets/style/custom.scss'
 import '../../../assets/style/props.scss'
-import { Tab, Col, Row, Nav, Form } from 'react-bootstrap'
-// import Order from '../Order'
+import { Tab, Col, Row, Nav } from 'react-bootstrap'
+
 import User from './User'
 import AllProduct from './AllProduct'
 import AllOrder from './AllOrder'
 import Revenue from './Revenue'
+import AllBill from './AllBill'
 
 const HomeAdmin = () => {
   return (
     <div className='homeAdmin py-3'>
-      <header>
-        <img className='w-5r m-3' src='/img/auction.png' alt='logo' />
-        {/* <p className='flex jc-c fs-30'>AK Website</p> */}
-      </header>
+
       <Tab.Container defaultActiveKey="first" transition={false}>
         <Row style={{ marginRight: '0' }}>
           <Col sm={3} >
-            <Form.Label className='fs-25 ml-2 mt-3'><b>Quản lý Website</b></Form.Label>
+            <div className='flex ml-2' style={{ borderBottom: '1px solid black' }}>
+              <img className='w-5r ml-8' alt='logo' src='/img/auction.jpg' />
+            </div>
             <Nav variant="pills" className="flex-column">
               <Nav.Item>
-                <Nav.Link className='fs-20' eventKey="first" >Quản lý user</Nav.Link>
+                <Nav.Link className='my-3' eventKey="first" >Quản lý user</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="second">Quản lý sản phẩm</Nav.Link>
+                <Nav.Link className='my-3' eventKey="second">Quản lý sản phẩm</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="third">Duyệt sản phẩm</Nav.Link>
+                <Nav.Link className='my-3' eventKey="third">Quản lý hóa đơn</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="fourth">Thống kê doanh thu</Nav.Link>
+                <Nav.Link className='my-3' eventKey="fourth">Duyệt sản phẩm</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link className='my-3' eventKey="fifth">Thống kê doanh thu</Nav.Link>
               </Nav.Item>
             </Nav>
           </Col>
@@ -44,9 +47,12 @@ const HomeAdmin = () => {
                 <AllProduct />
               </Tab.Pane>
               <Tab.Pane eventKey="third" >
-                <AllOrder />
+                <AllBill />
               </Tab.Pane>
               <Tab.Pane eventKey="fourth" >
+                <AllOrder />
+              </Tab.Pane>
+              <Tab.Pane eventKey="fifth" >
                 <Revenue />
               </Tab.Pane>
             </Tab.Content>

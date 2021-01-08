@@ -92,9 +92,9 @@ const User = ({ history }) => {
       <div className='click ml-70pt py-4'>
         <Button variant="secondary" onClick={() => {
           localStorage.setItem('tokenAd', '')
-          history.push('/')
+          history.push('/admin')
         }}>Đăng xuất</Button>
-        <Button className='btn-grown' onClick={() => lockUser(userId)}>Xóa</Button>
+        <Button className='btn-grown' onClick={() => lockUser(userId)}>Khóa</Button>
       </div>
     </div>
   )

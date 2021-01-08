@@ -1,43 +1,81 @@
-import React, { useState } from 'react'
-import './index.scss'
-import './alo.css'
-import { Link } from "react-router-dom"
-
-import { signIn } from '../../lib/api'
+import React, { useState, useEffect } from "react";
+import "./index.scss";
+import "./alo.css";
+import { Link } from "react-router-dom";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import { signIn, loginSocial } from "../../lib/api";
+import firebase from "../../firebase"
 
 const Login = ({ history }) => {
-  const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
   const [check, setCheck] = useState(false)
+  const [uid, setUid] = useState('')
+  const [email, setEmail] = useState("")
+  const [displayName, setDisplayName] = useState('')
+
+  let uiConfig = {
+    signInFlow: "popup",
+    signInOptions: [
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    ],
+    callbacks: {
+      signInSuccess: () => false,
+    },
+  };
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+
+        setEmail(user.email)
+        setDisplayName(user.displayName)
+        setUid(user.uid)
+        const data = { uid, email, displayName }
+        if (uid !== '') {
+          loginSocial(data).then((res) => {
+            localStorage.setItem('token', res.data.token)
+            localStorage.setItem('authSocialID', res.data.user.authSocialID)
+            localStorage.setItem('userId', res.data.user._id)
+            history.push('/')
+          })
+        }
+      }
+    });
+    // return () => { };
+  }, [uid])
 
   //fuction
   const getName = (e) => {
-    setName(e.target.value)
-  }
+    setName(e.target.value);
+  };
   const getPassword = (e) => {
-    setPassword(e.target.value)
-  }
+    setPassword(e.target.value);
+  };
 
   const onSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const data = {
       username: name,
-      password
-    }
-    signIn(data).then(res => {
-      console.log(res.data)
-      localStorage.setItem('token', res.data.token)
-      localStorage.setItem('userId', res.data.user._id)
-      history.push('')
-    }).catch((res) => {
-      console.log(res)
-      setCheck(true)
-    })
-  }
+      password,
+    };
+    signIn(data)
+      .then((res) => {
+        console.log(res.data);
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("userId", res.data.user._id);
+        history.push("/");
+      })
+      .catch((res) => {
+        console.log(res);
+        setCheck(true);
+      });
+  };
   return (
-    <div className='login'>
+    <div className="login">
       <div className="container px-4 h-full">
-        <div className="flex content-center items-center justify-center h-full">
+        <div className="flex content-center items-center justify-center h-full py-4">
           <div className="w-full lg:w-4/12 px-4">
             <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-300 border-0">
               <div className="rounded-t mb-0 px-6 py-6">
@@ -46,36 +84,9 @@ const Login = ({ history }) => {
                     Sign in with
                   </h6>
                 </div>
-                <div className="btn-wrapper text-center">
-                  <button
-                    className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
-                    type="button"
-                  >
-                    <img
-                      alt="..."
-                      className="w-5 mr-1"
-                      src="/img/facebook-circular-logo.png"
-                    />
-                    Facebook
-                  </button>
-                  <button
-                    className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
-                    type="button"
-                  >
-                    <img
-                      alt="..."
-                      className="w-5 mr-1"
-                      src="/img/google.svg"
-                    />
-                    Google
-                  </button>
-                </div>
                 <hr className="mt-6 border-b-1 border-gray-400" />
               </div>
               <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                <div className="text-gray-500 text-center mb-3 font-bold">
-                  <small>Or sign in with credentials</small>
-                </div>
                 <form onSubmit={onSubmit}>
                   <div className="relative w-full mb-3">
                     <label
@@ -119,11 +130,11 @@ const Login = ({ history }) => {
                         Remember me
                       </span>
                     </label>
-                    {
-                      (check === true) ? (
-                        <div>*User Name or Password are incorrect</div>
-                      ) : (<div></div>)
-                    }
+                    {check === true ? (
+                      <div>*User Name or Password are incorrect</div>
+                    ) : (
+                        <div></div>
+                      )}
                   </div>
 
                   <div className="text-center mt-6">
@@ -133,6 +144,10 @@ const Login = ({ history }) => {
                     >
                       Sign In
                     </button>
+                    <StyledFirebaseAuth
+                      uiConfig={uiConfig}
+                      firebaseAuth={firebase.auth()}
+                    />
                   </div>
                 </form>
               </div>
@@ -157,6 +172,6 @@ const Login = ({ history }) => {
         </div>
       </div>
     </div>
-  )
-}
-export default Login
+  );
+};
+export default Login;

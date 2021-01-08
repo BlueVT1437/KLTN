@@ -5,43 +5,58 @@ import '../../assets/style/props.scss'
 import Countdown from 'react-countdown'
 
 import { getAllDiseds } from '../../lib/utils';
-import { sortProductByExpiredAt, getuserbytoken, checkExpired } from '../../lib/api'
-//components
+import { sortProductByExpiredAt, getuserbytoken, checkExpired, searchProduct } from '../../lib/api'
+
 import Navbar from '../../components/Navbar'
-import Loading from '../../components/Loading'
+// import Loading from '../../components/Loading'
 import ProductList from '../../components/ProductList'
 import { Button } from 'react-bootstrap';
 
 const Home = (props) => {
   const { history } = props
+  const token = localStorage.getItem('token') || ''
   const [products, setProducts] = useState([])
   const [dishes, setDishes] = useState(null)
   const [user, setUser] = useState({})
-  const token = localStorage.getItem('token') || ''
+  const [check, setCheck] = useState(false)
+  const [searchList, setSearchList] = useState([])
 
   const currentPage = 1
   let limit = 5
 
+  const data = { token, currentPage, limit }
   useEffect(() => {
-    const data = { token, currentPage, limit }
     if (dishes === null)
       setDishes(getAllDiseds())
     sortProductByExpiredAt(data).then((res) => {
       setProducts(res.data.results.result)
     })
-    getuserbytoken(data).then((res) => {
-      setUser(res.data.user)
-    })
+    checkExpired()
   }, [])
+  useEffect(() => {
+    if (token !== '')
+      getuserbytoken(data).then((res) => {
+        setUser(res.data.user)
+      })
+  }, [token])
+
   const searchTextRef = useRef('')
 
   const Search = () => {
-    console.log(searchTextRef.current.value)
+    const data = { name: searchTextRef.current.value }
+    if (searchTextRef.current.value !== '') {
+      setCheck(true)
+      searchProduct(data).then((res) => {
+        setSearchList(res.data.data)
+        console.log(searchList)
+      })
+    }
+    else (setCheck(false))
   }
 
   return (
     <div className='home'>
-      <Navbar firstname={user.username} />
+      <Navbar firstname={user.lastName} />
       <div className='home-header'>
         <div className='content'>
           BUY AND SELL<br />Authentic Goods
@@ -54,7 +69,7 @@ const Home = (props) => {
           </Button>
         </div>
 
-        <Button className='sellbtn' onClick={() => (token !== '') ? (history.push('sell')) : (history.push('login'))}>SELL NOW</Button>
+        <Button className='sellbtn' onClick={() => (token !== '') ? (history.push('sell')) : (history.push('login'))}>ĐĂNG SẢN PHẨM</Button>
       </div>
 
       <div className='home-body py-4'>
@@ -98,11 +113,10 @@ const Home = (props) => {
         </div>
 
         <div className='product-List'>
-          <div className='name-list'>EXPIRE </div>
-          <ul className='body-dishes'>
+          <div className='name-list'>{(check === false) ? ('Sắp hết hạn') : ('Kết quả tìm kiếm: ')} </div>
+          <ul className='body-list'>
             {
-              (products !== null) ? (
-                // (products.length > 4) ? (products.length = 5) : '',
+              (products !== null && check === false) ? (
                 products.map((value, i) => (
                   <li key={i} className='listItemPro' onClick={() => history.push('details/' + value._id)}>
                     <div className='images'>
@@ -111,16 +125,35 @@ const Home = (props) => {
                     <div className='ten'>
                       <div style={{ height: '3rem' }}>{value.name}</div>
                       <Countdown className='fs-20' date={value.expiredAt}
-                        onMount={() => {
-                          checkExpired()
-                          history.push('/')
-                        }}
+                        // onMount={() => {
+                        //   if (value.status !== 1)
+                            
+                        // }}
                       />
                       <div style={{ fontWeight: 'bold' }}>{new Intl.NumberFormat('de-DE').format(value.currentPrice)} VND</div>
                     </div>
                   </li>
                 ))
-              ) : (<Loading />)
+              ) : (
+                  (searchList.length > 4) ? (searchList.length = 5) : '',
+                  searchList.map((value, i) => (
+                    <li key={i} className='listItemPro' onClick={() => history.push('details/' + value._id)}>
+                      <div className='images'>
+                        <img className='img1' src={value.productPictures[0]} />
+                      </div>
+                      <div className='ten'>
+                        <div style={{ height: '3rem' }}>{value.name}</div>
+                        <Countdown className='fs-20' date={value.expiredAt}
+                          onMount={() => {
+                            checkExpired()
+                            history.push('/')
+                          }}
+                        />
+                        <div style={{ fontWeight: 'bold' }}>{new Intl.NumberFormat('de-DE').format(value.currentPrice)} VND</div>
+                      </div>
+                    </li>
+                  ))
+                )
             }
             <a className='ml-4' href='/products'>View All →</a>
           </ul>

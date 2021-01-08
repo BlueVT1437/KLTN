@@ -2,20 +2,17 @@ import React, { useEffect, useState } from 'react'
 import './history.scss'
 import '../../assets/style/custom.scss'
 import '../../assets/style/props.scss'
-import BootstrapTable from 'react-bootstrap-table-next'
 import { Button } from 'react-bootstrap'
+import BootstrapTable from 'react-bootstrap-table-next'
 import { withRouter } from 'react-router'
 
-import { getOrder } from '../../lib/api'
+import { getSold } from '../../lib/api'
 
-import Rating from './Rating'
-
-const History = (props) => {
+const Sold = (props) => {
   const { userId, history } = props
 
-  const [show, setShow] = useState(false)
-  const [orders, setOrders] = useState([])
-  const [orderId, setOrderId] = useState('')
+  const [auctions, setAuctions] = useState([])
+  const [productId, setProductId] = useState('')
 
   const changeTime = (value) => {
     let date = new Date(value);
@@ -24,23 +21,20 @@ const History = (props) => {
   useEffect(() => {
     const data = { userId }
     if (userId !== '') {
-      getOrder(data).then((res) => {
-        setOrders(res.data.order)
+      getSold(data).then((res) => {
+        setAuctions(res.data.products)
       })
     }
   }, [userId])
 
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
-
-  const products = orders.map((value, i) => {
+  const products = auctions.map((value, i) => {
     return {
       stt: i + 1,
-      sp: value.productId.name,
-      price: new Intl.NumberFormat('de-DE').format(value.price + 100000 - 0) + ' VND',
-      status: (value.status == 0) ? ("Chưa thanh toán") : ("Đã thanh toán"),
-      star: value.star || "Chưa đánh giá",
-      time: changeTime(value.CheckoutTime),
+      sp: value.name,
+      price: new Intl.NumberFormat('de-DE').format(value.currentPrice) + ' VND',
+      fee: new Intl.NumberFormat('de-DE').format(value.currentPrice * 10 / 100) + ' VND',
+      time: new Intl.NumberFormat('de-DE').format(value.currentPrice - value.currentPrice * 10 / 100) + ' VND',
+      status: (value.status === '3') ? ('Thành công') : ('Thất bại'),
       id: value._id
     }
   })
@@ -51,28 +45,27 @@ const History = (props) => {
   },
   {
     dataField: 'sp',
-    text: 'Tên sản phẩm',
-    style: {width: '25%'}
-  },
-  {
-    dataField: 'star',
-    text: 'Đánh giá',
+    text: 'Tên sản phẩm'
   },
   {
     dataField: 'price',
-    text: 'Số tiền thanh toán'
+    text: 'Số tiền đấu giá'
   },
   {
-    dataField: 'status',
-    text: 'Thanh toán'
+    dataField: 'fee',
+    text: 'Tiền phí'
   },
   {
     dataField: 'time',
-    text: 'Thời gian giao hàng'
+    text: 'Tiền nhận được'
   },
   {
-    dataFiled: 'delivery',
-    text: 'Giao hàng'
+    dataField: 'status',
+    text: 'Đấu giá'
+  },
+  {
+    dataField: 'money',
+    text: 'Thanh toán'
   }
   ]
 
@@ -85,17 +78,13 @@ const History = (props) => {
 
   const rowEvents = {
     onClick: (e, row, rowIndex) => {
-      if (row.star === "Chưa đánh giá") {
-        handleShow()
-        setOrderId(row.id)
-      }
-      // console.log(row)
+      setProductId(row.id)
     }
   }
 
   return (
     <div className='history p-3'>
-      <h1 className='fs-25 py-3 ml-4' ><b>Hóa đơn</b></h1>
+      <h1 className='fs-25 py-3 ml-4' ><b>Sản phẩm đã đấu giá</b></h1>
       <BootstrapTable
         keyField="id"
         data={products}
@@ -103,14 +92,15 @@ const History = (props) => {
         bordered={false}
         classes='table-custom'
         hover
+        responsive
         selectRow={selectRow}
         rowEvents={rowEvents}
       />
-      <Rating show={show} handleClose={handleClose} orderId={orderId} />
-      <div className='click ml-90pt py-4'>
+      <div className='click ml-80pt py-4'>
         <Button variant="secondary" onClick={() => history.push('/')}>Trở lại</Button>
+        <Button className='btn-grown' onClick={() => history.push('/bill/' + productId)} >Xác nhận</Button>
       </div>
     </div>
   )
 }
-export default withRouter(History) 
+export default withRouter(Sold)

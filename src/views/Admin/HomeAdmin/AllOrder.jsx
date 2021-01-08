@@ -4,11 +4,12 @@ import '../../../assets/style/props.scss'
 import { Button } from 'react-bootstrap'
 import BootstrapTable from 'react-bootstrap-table-next'
 import { withRouter } from 'react-router'
+import paginationFactory from 'react-bootstrap-table2-paginator'
 
-import { getProductsNotValid } from '../../../lib/api'
+import { getProductsNotValid, okProduct } from '../../../lib/api'
 
 const AllOrder = ({ history }) => {
-
+  const [productId, setProductId] = useState('')
   const [valids, setValids] = useState([])
 
   useEffect(() => {
@@ -22,7 +23,8 @@ const AllOrder = ({ history }) => {
       stt: i + 1,
       name: value.name,
       price: new Intl.NumberFormat('de-DE').format(value.startPrice) + ' VND',
-      buynow: new Intl.NumberFormat('de-DE').format('200000') + ' VND',
+      buynow: new Intl.NumberFormat('de-DE').format(value.buyNow) + ' VND',
+      step: new Intl.NumberFormat('de-DE').format(value.stepUp) + ' VND',
       id: value._id
     }
   })
@@ -43,6 +45,10 @@ const AllOrder = ({ history }) => {
     dataField: 'buynow',
     text: 'Giá bán ngay'
   },
+  {
+    dataField: 'step',
+    text: 'Bước giá'
+  },
   ]
 
   const selectRow = {
@@ -54,8 +60,7 @@ const AllOrder = ({ history }) => {
 
   const rowEvents = {
     onClick: (e, row, rowIndex) => {
-      // setInfo(histories[0])
-      window.alert('click ' + rowIndex)
+      setProductId(row.id)
     }
   }
 
@@ -76,9 +81,9 @@ const AllOrder = ({ history }) => {
       <div className='click ml-70pt py-4'>
         <Button variant="secondary" onClick={() => {
           localStorage.setItem('tokenAd', '')
-          history.push('/')
+          history.push('/admin')
         }}>Đăng xuất</Button>
-        <Button className='btn-grown'>Duyệt</Button>
+        <Button className='btn-grown' onClick={() => okProduct(productId)}>Duyệt</Button>
       </div>
     </div>
   )

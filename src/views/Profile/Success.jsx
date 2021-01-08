@@ -8,15 +8,16 @@ import { withRouter } from 'react-router'
 
 import { getAuctionSuccess } from '../../lib/api'
 
-import Rating from './Rating'
-
 const Success = (props) => {
   const { userId, history } = props
 
-  const [show, setShow] = useState(false)
   const [auctions, setAuctions] = useState([])
   const [productId, setProductId] = useState('')
 
+  const changeTime = (value) => {
+    let date = new Date(value);
+    return (date.getHours() + ':' + date.getMinutes() + ' ' + '-' + ' ' + (date.getDate() + 3 - 0) + '/' + (date.getMonth() + 1) + '/' + date.getFullYear())
+  }
   useEffect(() => {
     const data = { userId }
     if (userId !== '') {
@@ -26,16 +27,14 @@ const Success = (props) => {
     }
   }, [userId])
 
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
-
   const products = auctions.map((value, i) => {
     return {
       stt: i + 1,
-      sp: value.product.name,
-      price: value.price,
-      status: "Thành công",
-      id: value.product._id
+      sp: (value.product) ? (value.product.name) : '',
+      price: new Intl.NumberFormat('de-DE').format(value.price) + ' VND',
+      status: "100.000 VND",
+      time: new Intl.NumberFormat('de-DE').format(value.price + 100000 - 0) + ' VND',
+      id: (value.product) ? value.product._id : ''
     }
   })
 
@@ -53,7 +52,11 @@ const Success = (props) => {
   },
   {
     dataField: 'status',
-    text: 'Trạng thái'
+    text: 'Tiền ship'
+  },
+  {
+    dataField: 'time',
+    text: 'Tổng tiền'
   },
   ]
 
@@ -72,7 +75,7 @@ const Success = (props) => {
 
   return (
     <div className='history p-3'>
-      <h1 className='fs-25 py-3 ml-4' ><b>History</b></h1>
+      <h1 className='fs-25 py-3 ml-4' ><b>Đấu giá thành công</b></h1>
       <BootstrapTable
         keyField="id"
         data={products}
@@ -84,11 +87,10 @@ const Success = (props) => {
         selectRow={selectRow}
         rowEvents={rowEvents}
       />
-      <div className='click ml-70pt py-4'>
-        <Button variant="secondary" onClick={() => history.push('')}>Trở lại</Button>
+      <div className='click ml-80pt py-4'>
+        <Button variant="secondary" onClick={() => history.push('/')}>Trở lại</Button>
         <Button className='btn-grown' onClick={() => history.push('/bill/' + productId)} >Xác nhận</Button>
       </div>
-      <Rating show={show} handleClose={handleClose} />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import './info.scss'
 import '../../assets/style/custom.scss'
 import '../../assets/style/props.scss'
@@ -7,20 +7,48 @@ import ReactStars from "react-rating-stars-component"
 import { withRouter } from 'react-router'
 
 import { getAddress } from '../../lib/api'
+import ChangInfo from './ChangeInfo'
 
 const Infomation = (props) => {
   const { user, addressId, star, history } = props
 
+  const [show, setShow] = useState(false)
   const [address, setAddress] = useState({})
+  const [editingField, setEditingField] = useState('')
 
   useEffect(() => {
     if (addressId !== '') {
       const data = { addressId }
       getAddress(data).then((res) => {
-        setAddress(res.data.address[0])
+        setAddress(res.data.address.pop())
       })
     }
   }, [addressId])
+
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+
+  const submitEdit = (e, key) => {
+    const ele = document.getElementById(`info-${key}`)
+    const newData = ele.value
+    console.log(newData);
+
+    setEditingField('')
+  }
+
+  const editClick = (key) => {
+    const ele = document.getElementById(`info-${key}`)
+    ele.value = ele.placeholder
+    setEditingField(key)
+  }
+
+  const renderButtons = (key) => {
+    return (
+      editingField === key
+        ? <Button className='btn-img' onClick={(e) => submitEdit(e, key)}><img alt='' src='/img/save.PNG' /> </Button>
+        : <Button className='btn-img' onClick={() => editClick(key)}><img alt='' src='/img/butchi.PNG' /> </Button>
+    )
+  }
 
   return (
     <div className='infomation'>
@@ -31,43 +59,47 @@ const Infomation = (props) => {
             <Form.Group as={Row}>
               <Form.Label column className='text-right' lg={3}>Full Name</Form.Label>
               <Col lg={6}>
-                <Form.Control className='bd' type="text" value={(user.firstName !== undefined) ? (user.firstName + ' ' + user.lastName) : ('Loading...')} disabled />
+                <Form.Control id='info-fullName' className='bd' type="text" placeholder={(user.firstName !== undefined) ? (user.firstName + ' ' + user.lastName) : ('Loading...')} disabled={editingField === 'fullName' ? false : true} />
               </Col>
+              {renderButtons('fullName')}
             </Form.Group>
 
             <Form.Group as={Row}>
               <Form.Label column className='text-right' lg={3}>Phone Number</Form.Label>
               <Col lg={6}>
-                <Form.Control className='bd' type="text" value={(address.mobileNumber === undefined) ? ('Loading...') : (address.mobileNumber)} disabled />
+                <Form.Control id='info-phone' className='bd' type="text" placeholder={(address.mobileNumber === undefined) ? ('Loading...') : (address.mobileNumber)} disabled={editingField === 'phone' ? false : true} />
               </Col>
+              {renderButtons('phone')}
             </Form.Group>
 
             <Form.Group as={Row}>
               <Form.Label column className='text-right' lg={3}>Address</Form.Label>
               <Col lg={6}>
-                <Form.Control className='bd' type="text" value={(address.detail === undefined) ? ('Loading...') : (address.detail + ', ' + address.district + ', ' + address.city)} disabled />
+                <Form.Control className='bd' type="text" placeholder={(address.detail === undefined) ? ('Loading...') : (address.detail + ', ' + address.city)} disabled />
               </Col>
+
             </Form.Group>
 
             <Form.Group as={Row}>
-              <Form.Label column className='text-right' lg={3}>Address Type</Form.Label>
+              <Form.Label column className='text-right' lg={3}>Email</Form.Label>
               <Col lg={6}>
-                <Form.Control className='bd' type="text" value={(address.addressType === undefined) ? ('Loading...') : (address.addressType)} disabled />
+                <Form.Control id='info-email' className='bd' type="text" placeholder={(user.email === undefined) ? ('Loading...') : (user.email)} disabled={editingField === 'email' ? false : true} />
               </Col>
             </Form.Group>
 
             <Form.Group as={Row}>
               <Form.Label column className='text-right' lg={3}>User Name</Form.Label>
               <Col lg={6}>
-                <Form.Control className='bd' type="text" value={(user.firstName !== undefined) ? (user.username) : ('Loading...')} disabled />
+                <Form.Control className='bd' type="text" placeholder={(user.firstName !== undefined) ? (user.username) : ('Loading...')} disabled />
               </Col>
+
             </Form.Group>
 
             <Form.Group as={Row} >
               <Form.Label column className='text-right' lg={3}>Rating</Form.Label>
               <Col lg={6}>
-
                 <ReactStars
+                  key={Math.random()}
                   count={5}
                   value={star}
                   size={24}
@@ -81,10 +113,12 @@ const Infomation = (props) => {
             </Form.Group>
           </Form>
 
-          <div className='click ml-70pt py-4'>
+          <div className='click ml-60pt py-4'>
             <Button variant="secondary" onClick={() => history.push('')}>Trở lại</Button>
-            {/* <Button className='btn-grown' type='submit'>Lưu thay đổi</Button> */}
+            <Button className='btn-grown' onClick={() => handleShow()}>Thay đổi mật khẩu</Button>
           </div>
+
+          <ChangInfo show={show} handleClose={handleClose} />
         </div>
       </div>
     </div>

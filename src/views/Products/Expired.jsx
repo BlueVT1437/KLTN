@@ -26,11 +26,7 @@ const Expired = (props) => {
 
   return (
     <div className='brands pb-3'>
-      <p className='text'>EXPIRE</p>
-      <DropdownButton alignRight title="Filter" className='sort'>
-        <Dropdown.Item eventKey="#/action-1">Time</Dropdown.Item>
-        <Dropdown.Item eventKey="#/action-2">Low Price</Dropdown.Item>
-      </DropdownButton>
+      <p className='text'>ALL PRODUCTS</p>
 
       <div className='goods mb-3'>
         <ul className='body-dishes mx-4'>

@@ -38,7 +38,7 @@ const Selling = (props) => {
     return {
       stt: i + 1,
       sp: value.name,
-      price: value.currentPrice,
+      price: new Intl.NumberFormat('de-DE').format(value.currentPrice) + ' VND',
       status: changeTime(value.expiredAt) ,
       id: value._id
     }
